@@ -1,6 +1,5 @@
 import { useState } from "react";
 import "./MyForm.css"; // Import the CSS file for styling
-
 const MyForm = () => {
   const [formData, setFormData] = useState({
     first_name: "",
@@ -12,7 +11,7 @@ const MyForm = () => {
     cap: "",
     date_birth: "",
   });
-
+  
   const handleInputChange = (e) => {
     setFormData({
       ...formData,
