@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./MyForm.css"; // Import the CSS file for styling
 
 const MyForm = () => {
@@ -109,7 +109,7 @@ const MyForm = () => {
           />
         </div>
 
-        <div class="btn-container">
+        <div className="btn-container">
           <button type="submit">Conferma</button>
         </div>
       </form>
