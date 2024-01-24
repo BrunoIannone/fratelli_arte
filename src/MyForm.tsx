@@ -12,37 +12,15 @@ const MyForm = () => {
     date_birth: "",
   });
   
-  const handleInputChange = (e) => {
+  const handleInputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   try {
-  //     const response = await fetch("http://localhost:3000/addFidelityCard", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(formData),
-  //     });
-
-  //     if (response.ok) {
-  //       const result = await response.json();
-  //       console.log("Insert successful. Insert ID:", result.insertId);
-  //       // You can perform further actions here if needed
-  //     } else {
-  //       console.error("Insert failed. Server response:", response.statusText);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error during fetch:", error.message);
-  //   }
-  // };
-  const handleSubmit = async (e) => {
+ 
+  const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
     try {
