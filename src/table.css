@@ -1,0 +1,41 @@
+.table-container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .attribute-selector {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-around;
+  }
+  
+  .attribute-checkbox {
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Style the checkboxes */
+  .attribute-checkbox input {
+    margin-right: 5px;
+    transform: scale(3.5); /* Adjust the scale for larger or smaller checkboxes */
+  }
+  
+  .customer-table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+  }
+  
+  .customer-table th,
+  .customer-table td {
+    border: 1px solid #dddddd;
+    padding: 8px;
+  }
+  
+  .customer-table th {
+    background-color: #f2f2f2;
+  }
+  

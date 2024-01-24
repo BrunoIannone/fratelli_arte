@@ -9,10 +9,10 @@ const bodyParser = require("body-parser");
 app.use(cors());
 app.use(bodyParser.json());
 
-app.get("/eseguiQuery", async (req, res) => {
+app.get("/recoverUserData", async (req, res) => {
   try {
     // Chiamata alla funzione asincrona del modulo db.js
-    const q = await db.asyncFunction();
+    const q = await db.recoverUserData();
 
     // Rispondi al client
     res.send(q);

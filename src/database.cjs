@@ -9,76 +9,78 @@ const pool = mariadb.createPool({
     database:"fratelli_arte"
 });
 
-async function asyncFunction() {
+async function recoverUserData() {
   let conn;
   try {
     conn = await pool.getConnection();
-    const res = await conn.query("SELECT last_name,id_fidelity_card from customer where last_name = 'Iannone'");
-    console.log(res); //[ {val: 1}, meta: ... ]
+    const res = await conn.query("SELECT last_name, id_fidelity_card FROM customer WHERE last_name = 'Iannone'");
+    console.log(res); // Output may vary based on your database response
     return res;
-    //const res = await conn.query("INSERT INTO myTable value (?, ?)", [1, "mariadb"]);
-    //console.log(res); // { affectedRows: 1, insertId: 1, warningStatus: 0 }
   } catch (err) {
     throw err;
   } finally {
-    if (conn)  conn.end(); 
+    if (conn) {
+      conn.end();
+      console.log("Connection closed");
+    }
   }
 }
 
-async function addFidelityCard() {
-  let conn;
-  try {    
-    const values = [, , , ]; 
-
-    conn = await pool.getConnection();
-    const res = await conn.query("INSERT INTO fidelity_card () values ()");
-    console.log(res); //[ {val: 1}, meta: ... ]
-    //return res;
-    //const res = await conn.query("INSERT INTO myTable value (?, ?)", [1, "mariadb"]);
-    //console.log(res); // { affectedRows: 1, insertId: 1, warningStatus: 0 }
-  } catch (err) {
-    throw err;
-  } finally {
-    if (conn)  conn.end(); 
-  }
-}
-async function addUser(formData, res) {
+async function addUser(formData) {
   let conn;
   try {
     conn = await pool.getConnection();
-    const query_card = "INSERT INTO fidelity_card () VALUES ()";
-    var res = await conn.query(query_card);
-    console.log(parseInt(res.insertId, 10));
-    id = parseInt(res.insertId, 10)
-    const query = "INSERT INTO customer (first_name, last_name, address, email, id_fidelity_card, telephone_number, cap, date_birth) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    const values = [
-      formData.first_name,
-      formData.last_name,
-      formData.address,
-      formData.email,
-      id,
-      formData.telephone_number,
-      formData.cap,
-      formData.date_birth
-    ];
-    //console.log(query);
 
+    await conn.beginTransaction();
+
+    const id = await insertFidelityCard(conn);
+
+    await insertCustomer(conn, formData, id);
+
+    await conn.commit();
     
-    res = await conn.query(query, values);
-    console.log(parseInt(res.insertId, 10));
-    conn.end();
     return true;
   } catch (err) {
+    if (conn) {
+      await conn.rollback();
+    }
     throw err;
   } finally {
-    if (conn)  conn.end(); console.log("CHIUSO");
+    if (conn) {
+      conn.release();
+      console.log("Connection released");
+    }
   }
-  
 }
+
+async function insertFidelityCard(conn) {
+  const query = "INSERT INTO fidelity_card () VALUES ()";
+  const res = await conn.query(query);
+  console.log(parseInt(res.insertId, 10));
+  return parseInt(res.insertId, 10);
+}
+
+async function insertCustomer(conn, formData, id) {
+  const query = "INSERT INTO customer (first_name, last_name, address, email, id_fidelity_card, telephone_number, cap, date_birth) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+  const values = [
+    formData.first_name,
+    formData.last_name,
+    formData.address,
+    formData.email,
+    id,
+    formData.telephone_number,
+    formData.cap,
+    formData.date_birth
+  ];
+  const res = await conn.query(query, values);
+  console.log(parseInt(res.insertId, 10));
+}
+
+
+
 
 
 module.exports = {
-  asyncFunction,
-  addFidelityCard,
+  recoverUserData,
   addUser
 };

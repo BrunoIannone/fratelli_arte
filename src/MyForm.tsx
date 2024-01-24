@@ -24,7 +24,7 @@ const MyForm = () => {
     e.preventDefault();
     
     try {
-      const response = await fetch("http://localhost:3000/addUser", {
+      const response = await fetch("http://192.168.1.18:3000/addUser", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

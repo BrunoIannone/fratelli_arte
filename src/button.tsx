@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const Button = () => {
   const [response, setResponse] = useState('');
 
   const handleFetch = async () => {
     try {
-      const result = await fetch('http://localhost:3000/eseguiQuery');
+      const result = await fetch('http://192.168.1.18:3000/recoverUserData');
       const data = await result.text();
       setResponse(data);
     } catch (error) {
