@@ -19,11 +19,62 @@ const MyForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form submitted:", formData);
-  };
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
 
+  //   try {
+  //     const response = await fetch("http://localhost:3000/addFidelityCard", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(formData),
+  //     });
+
+  //     if (response.ok) {
+  //       const result = await response.json();
+  //       console.log("Insert successful. Insert ID:", result.insertId);
+  //       // You can perform further actions here if needed
+  //     } else {
+  //       console.error("Insert failed. Server response:", response.statusText);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error during fetch:", error.message);
+  //   }
+  // };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    try {
+      const response = await fetch("http://localhost:3000/addUser", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      
+      await response.json();
+      if (response){
+        setFormData(
+          {
+          first_name: "",
+          last_name: "",
+          address: "",
+          email: "",
+          id_fidelity_card: "",
+          telephone_number: "",
+          cap: "",
+          date_birth: "",}); 
+          console.log(formData);
+          }
+  
+
+    } catch (error) {
+      console.error("Errore durante la richiesta di inserimento", error);
+    }
+    
+  };
   return (
     <div className="form-container">
       <h1 style={{ textAlign: "center" }}>Nuova registrazione</h1>
@@ -36,6 +87,7 @@ const MyForm = () => {
             name="first_name"
             value={formData.first_name}
             onChange={handleInputChange}
+            
             required
           />
         </div>
