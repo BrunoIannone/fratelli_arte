@@ -1,24 +1,24 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import './table.css'; // Import the external CSS file for styling
 
 const Table = () => {
   // Example customer data
-  const customers = [
-    {
-      customer_id: 1,
-      first_name: 'John',
-      last_name: 'Doe',
-      address: '123 Main St',
-      email: 'john.doe@example.com',
-      id_fidelity_card: 123,
-      telephone_number: '555-1234',
-      cap: '12345',
-      date_birth: '1990-01-01',
-    },
-    // Add more customer objects as needed
-  ];
+  const [customers, setCustomers] = useState([{
+    customer_id: "",
+      first_name: "",
+      last_name: "",
+      address: "",
+      email: "",
+      id_fidelity_card: "",
+      telephone_number: "",
+      cap: "",
+      date_birth: "",}
+  ]);
+  
+ 
 
   const [selectedAttributes, setSelectedAttributes] = useState([]);
+  const [checkboxState, setCheckboxState] = useState(false);
 
   const handleAttributeChange = (event) => {
     const selectedAttribute = event.target.value;
@@ -32,11 +32,49 @@ const Table = () => {
       }
     });
   };
+  const handleFetch = async (query) => {
+    try {
+      const result = await fetch(`http://localhost:3000/recoverUserData/${query}`);
+      const data = await result.json();
+      console.log(data);
+      setCustomers(data);
+      
+    } catch (error) {
+      console.error('Errore durante la richiesta Fetch:', error);
+    }
+  };
+  const handleCheckAll = () => {
+    var query = 'SELECT ';
+  
+    // Log a message for each selected attribute
+    selectedAttributes.forEach((attribute) => {
+      console.log(
+        `Checkbox for attribute "${attribute}" is Active`
+      );
+  
+      // Add the selected attribute to the query
+      query = query + attribute + ",";
+    });
+  
+    // Remove the trailing comma
+    query = query.slice(0, -1);
+    query +=  " FROM customer"
+    console.log(query );
+    const data = handleFetch(query);
+    
+      // Rest of your code
+    // setSelectedAttributes((prevAttributes) =>
+    //   checkboxState ? [] : Object.keys(customers[0])
+    // );
+  };
 
   return (
     <div className="table-container">
       <h1>Customer Table</h1>
       <div className="attribute-selector">
+        <button onClick={handleCheckAll}>
+          {checkboxState ? 'Uncheck All' : 'Check All'}
+        </button>
         {Object.keys(customers[0]).map((attribute) => (
           <label key={attribute} className="attribute-checkbox">
             <input
@@ -44,6 +82,7 @@ const Table = () => {
               checked={selectedAttributes.includes(attribute)}
               onChange={handleAttributeChange}
               value={attribute}
+              disabled={checkboxState}
             />
             {attribute}
           </label>

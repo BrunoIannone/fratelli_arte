@@ -9,13 +9,15 @@ const bodyParser = require("body-parser");
 app.use(cors());
 app.use(bodyParser.json());
 
-app.get("/recoverUserData", async (req, res) => {
+app.get("/recoverUserData/:query", async (req, res) => {
   try {
     // Chiamata alla funzione asincrona del modulo db.js
-    const q = await db.recoverUserData();
+    const query = req.params.query
+    console.log(query)
+    const q = await db.recoverUserData(query);
 
     // Rispondi al client
-    res.send(q);
+    res.json(q);
   } catch (error) {
     console.error(error);
     res.status(500).send("Errore durante l'esecuzione della query");

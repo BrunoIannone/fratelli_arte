@@ -9,12 +9,12 @@ const pool = mariadb.createPool({
     database:"fratelli_arte"
 });
 
-async function recoverUserData() {
+async function recoverUserData(query) {
   let conn;
   try {
     conn = await pool.getConnection();
-    const res = await conn.query("SELECT last_name, id_fidelity_card FROM customer WHERE last_name = 'Iannone'");
-    console.log(res); // Output may vary based on your database response
+    const res = await conn.query(query);
+    console.log("DB" + res); // Output may vary based on your database response
     return res;
   } catch (err) {
     throw err;

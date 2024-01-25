@@ -5,7 +5,7 @@ const Button = () => {
 
   const handleFetch = async () => {
     try {
-      const result = await fetch('http://192.168.1.18:3000/recoverUserData');
+      const result = await fetch('http://localhost:3000/recoverUserData');
       const data = await result.text();
       setResponse(data);
     } catch (error) {
