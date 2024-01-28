@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./table.css"; // Import the external CSS file for styling
-import { useTranslation } from 'react-i18next';
+
 
 const Table = () => {
   // Example customer data
