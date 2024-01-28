@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./table.css"; // Import the external CSS file for styling
+import { useTranslation } from 'react-i18next';
 
 const Table = () => {
   // Example customer data
@@ -36,16 +37,51 @@ const Table = () => {
 
   const handleAttributeChange = (event) => {
     const selectedAttribute = event.target.value;
+  
     setSelectedAttributes((prevAttributes) => {
+      let updatedAttributes;
       if (prevAttributes.includes(selectedAttribute)) {
         // If the attribute is already selected, remove it
-        return prevAttributes.filter((attr) => attr !== selectedAttribute);
+        updatedAttributes = prevAttributes.filter((attr) => attr !== selectedAttribute);
       } else {
-        // If the attribute is not selected, add it
-        return [...prevAttributes, selectedAttribute];
+        // If the attribute is not selected, add it at the end
+        updatedAttributes = [...prevAttributes, selectedAttribute];
       }
+  
+      // Define the default order of attributes
+      const defaultAttributeOrder = [
+        "customer_id",
+        "first_name",
+        "last_name",
+        "address",
+        "email",
+        "id_fidelity_card",
+        "telephone_number",
+        "cap",
+        "date_birth",
+        "active",
+      ];
+  
+      // Sort the selected attributes based on the default order
+      const sortedAttributes = defaultAttributeOrder.filter((attr) =>
+        updatedAttributes.includes(attr)
+      );
+  
+      // Update the state with the sorted attributes
+      setCustomers((prevCustomers) => {
+        return prevCustomers.map((customer) => {
+          const updatedCustomer = {};
+          sortedAttributes.forEach((attr) => {
+            updatedCustomer[attr] = customer[attr];
+          });
+          return { ...customer, ...updatedCustomer }; // Merge existing attributes with updated ones
+        });
+      });
+  
+      return sortedAttributes;
     });
   };
+  
   const handleFetch = async (query) => {
     try {
       const result = await fetch(

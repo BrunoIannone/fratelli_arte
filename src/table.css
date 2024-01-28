@@ -1,20 +1,25 @@
 .table-container {
-    max-width: 800px;
+   display: block;
     margin: auto;
     padding: 20px;
+    justify-content: center;
     text-align: center;
+    
   }
   
   .attribute-selector {
     margin-top: 15px;
     display: flex;
     justify-content: space-around;
+    
   }
   
   .attribute-checkbox {
     margin-right: 10px;
     display: flex;
     align-items: center;
+    
+    
   }
   
   /* Style the checkboxes */
@@ -25,15 +30,19 @@
   }
   
   .customer-table {
-    width: 100%;
+    
+    margin: auto;
     margin-top: 20px;
     border-collapse: collapse;
+    
+    
   }
   
   .customer-table th,
   .customer-table td {
     border: 1px solid #dddddd;
     padding: 8px;
+    
   }
   
   .customer-table th {
