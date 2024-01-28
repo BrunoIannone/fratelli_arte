@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-import './table.css'; // Import the external CSS file for styling
+import React, { useState } from "react";
+import "./table.css"; // Import the external CSS file for styling
 
 const Table = () => {
   // Example customer data
-  const [customers, setCustomers] = useState([{
-    customer_id: "",
+  const [customers, setCustomers] = useState([
+    {
+      customer_id: "",
       first_name: "",
       last_name: "",
       address: "",
@@ -12,10 +13,23 @@ const Table = () => {
       id_fidelity_card: "",
       telephone_number: "",
       cap: "",
-      date_birth: "",}
+      date_birth: "",
+      active: "",
+    },
   ]);
-  
- 
+
+  const voidCustomer = {
+    customer_id: "",
+    first_name: "",
+    last_name: "",
+    address: "",
+    email: "",
+    id_fidelity_card: "",
+    telephone_number: "",
+    cap: "",
+    date_birth: "",
+    active: "",
+  };
 
   const [selectedAttributes, setSelectedAttributes] = useState([]);
   const [checkboxState, setCheckboxState] = useState(false);
@@ -34,35 +48,62 @@ const Table = () => {
   };
   const handleFetch = async (query) => {
     try {
-      const result = await fetch(`http://localhost:3000/recoverUserData/${query}`);
-      const data = await result.json();
+      const result = await fetch(
+        `http://localhost:3000/recoverUserData/${query}`
+      );
+      var data = await result.json();
       console.log(data);
+
+      for (let i = 0; i < data.length; i++) {
+        data[i] = Object.assign({}, voidCustomer, data[i]);
+        if (data[i].date_birth != "") {
+          data[i].date_birth = data[i].date_birth.split("T")[0];
+        }
+      }
+
+      console.log(data);
+
       setCustomers(data);
-      
     } catch (error) {
-      console.error('Errore durante la richiesta Fetch:', error);
+      console.error("Errore durante la richiesta Fetch:", error);
     }
   };
   const handleCheckAll = () => {
-    var query = 'SELECT ';
-  
+    var query = "SELECT ";
+    var isActive = false;
+
     // Log a message for each selected attribute
     selectedAttributes.forEach((attribute) => {
-      console.log(
-        `Checkbox for attribute "${attribute}" is Active`
-      );
-  
+      console.log(`Checkbox for attribute "${attribute}" is Active`);
+      if (attribute === "active") {
+        isActive = true;
+      }
+
       // Add the selected attribute to the query
-      query = query + attribute + ",";
+      else if (attribute === "id_fidelity_card") {
+        query += "customer." + String(attribute) + ",";
+      } else {
+        query += attribute + ",";
+      }
     });
-  
+    console.log(query);
+
     // Remove the trailing comma
-    query = query.slice(0, -1);
-    query +=  " FROM customer"
-    console.log(query );
+
+    if (isActive) {
+      query += " IF(active, 'subscribed', 'unsubscribed') as active";
+
+      query +=
+        " FROM customer join fidelity_card on customer.id_fidelity_card = fidelity_card.id_fidelity_card";
+    } else {
+      query = query.slice(0, -1);
+      query += " FROM customer";
+    }
+
+    console.log(query);
     const data = handleFetch(query);
-    
-      // Rest of your code
+
+    // Rest of your code
     // setSelectedAttributes((prevAttributes) =>
     //   checkboxState ? [] : Object.keys(customers[0])
     // );
@@ -73,7 +114,7 @@ const Table = () => {
       <h1>Customer Table</h1>
       <div className="attribute-selector">
         <button onClick={handleCheckAll}>
-          {checkboxState ? 'Uncheck All' : 'Check All'}
+          {checkboxState ? "Uncheck All" : "Check All"}
         </button>
         {Object.keys(customers[0]).map((attribute) => (
           <label key={attribute} className="attribute-checkbox">
@@ -88,7 +129,10 @@ const Table = () => {
           </label>
         ))}
       </div>
-      <CustomerTable customers={customers} selectedAttributes={selectedAttributes} />
+      <CustomerTable
+        customers={customers}
+        selectedAttributes={selectedAttributes}
+      />
     </div>
   );
 };
