@@ -5,8 +5,9 @@ import "./table.css"; // Import the external CSS file for styling
 import { useTranslation} from 'react-i18next';
 import toastr from "toastr";
 import 'toastr/build/toastr.min.css';
-import "../css/manage_customers.css"
-import {Customer} from "./customer"
+import "../css/manage_customers.css";
+import {Customer} from "./customer";
+
 const Table = () => {
   
   const { t } = useTranslation();
@@ -27,7 +28,7 @@ const Table = () => {
     },
   ]);
 
-  const voidCustomer = {
+  const emptyCustomer = {
     customer_id: "",
     first_name: "",
     last_name: "",
@@ -47,8 +48,9 @@ const Table = () => {
 
   const handleAttributeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedAttribute = event.target.value;
-  
+    console.log(selectedAttribute, "ATT")
     setSelectedAttributes((prevAttributes) => {
+      console.log(prevAttributes, "ATT")
       let updatedAttributes: string[]; 
       if (prevAttributes.includes(selectedAttribute)) {
         // If the attribute is already selected, remove it
@@ -101,7 +103,7 @@ const Table = () => {
       console.log(data);
 
       for (let i = 0; i < data.length; i++) {
-        data[i] = Object.assign({}, voidCustomer, data[i]);
+        data[i] = Object.assign({}, emptyCustomer, data[i]);
         if (data[i].date_birth != "") {
           data[i].date_birth = data[i].date_birth.split("T")[0];
         }
@@ -119,7 +121,7 @@ const Table = () => {
     var query = "SELECT ";
     var isActive = false;
     console.log(selectedAttributes,"EGOLO");
-    if (selectedAttributes.length ===0)
+    if (selectedAttributes.length === 0)
     {
       toastr.warning("Non hai selezionato nessun attributo!", "Selezione vuota",{ closeButton: true, progressBar: true, timeOut: 5000, extendedTimeOut: 2000});
       return;
