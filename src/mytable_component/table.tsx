@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+//import React, { useState } from "react";
+//import { useTranslation, Trans } from 'react-i18next';
+import { useState } from "react";
 import "./table.css"; // Import the external CSS file for styling
-import { useTranslation, Trans } from 'react-i18next';
+import { useTranslation} from 'react-i18next';
 import toastr from "toastr";
 import 'toastr/build/toastr.min.css';
 import "./css/manage_customers.css"
+
 const Table = () => {
   
   const { t } = useTranslation();
@@ -40,7 +43,7 @@ const Table = () => {
   const [selectedAttributes, setSelectedAttributes] = useState([]);
   const [checkboxState, setCheckboxState] = useState(false);
 
-  const handleAttributeChange = (event) => {
+  const handleAttributeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedAttribute = event.target.value;
   
     setSelectedAttributes((prevAttributes) => {

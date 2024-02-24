@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./css/manage_customers.css";
-import Table from "./table.tsx";
+import Table from "./mytable_component/table.tsx";
 import "./i18n";
 import MyButton from "./mybutton_component/MyButton.tsx"
 
