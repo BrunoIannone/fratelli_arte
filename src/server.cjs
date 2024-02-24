@@ -46,8 +46,10 @@ app.post("/addUser", async (req, res) => {
     
     }
   } catch (error) {
+
     console.error(error);
-    res.status(500).json({ success: false, message: "Errore durante l'esecuzione della query" });
+    console.log(error.errno)
+    res.status(500).json({ success: false, message: "Errore durante l'esecuzione della query", errno:error.errno});
   }
 });
 

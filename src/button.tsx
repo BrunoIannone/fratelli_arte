@@ -1,6 +1,10 @@
 import { useState } from 'react';
+import { useTranslation, Trans } from 'react-i18next';
 
 const Button = () => {
+  
+  const { t } = useTranslation();
+
   const [response, setResponse] = useState('');
 
   const handleFetch = async () => {
@@ -17,9 +21,11 @@ const Button = () => {
   return (
     <div>
       <h1>Applicazione React con Fetch</h1>
-      <button onClick={handleFetch}>Esegui Fetch</button>
+      
+      <button onClick={handleFetch}>{t("DoFetch")}</button>
+      
       <div>
-        <strong>Risposta dal server:</strong> {response}
+        <strong>{t("ServerAnswer")}:</strong> {response}
       </div>
     </div>
   );

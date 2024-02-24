@@ -1,5 +1,8 @@
 import { useState } from "react";
 import "./MyForm.css"; // Import the CSS file for styling
+import toastr from "toastr";
+import 'toastr/build/toastr.min.css';
+
 const MyForm = () => {
   const [formData, setFormData] = useState({
     first_name: "",
@@ -24,7 +27,7 @@ const MyForm = () => {
     e.preventDefault();
     
     try {
-      const response = await fetch("http://192.168.1.18:3000/addUser", {
+      const response = await fetch("http://localhost:3000/addUser", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -32,8 +35,11 @@ const MyForm = () => {
         body: JSON.stringify(formData),
       });
       
-      await response.json();
-      if (response){
+      const responseData = await response.json();
+      console.log("LOGGO:");
+
+      console.log(responseData);
+      if (response.ok){
         setFormData(
           {
           first_name: "",
@@ -44,12 +50,23 @@ const MyForm = () => {
           telephone_number: "",
           cap: "",
           date_birth: "",}); 
-          console.log(formData);
+          toastr.success('Dati inviati correttamente!', 'Invio Riuscito');
+          //console.log(formData);
           }
-  
+      else{
+        if (responseData.errno === 1062){
+          toastr.error("Attenzione! Stai cercando di inserire un numero di telefono o una mail già utilizzati per qualche altro utente!.", "Rilevato telefono o e-mail duplicati", { closeButton: true, progressBar: true, timeOut: 5000, extendedTimeOut: 2000});
+
+        }
+
+      }
+          
 
     } catch (error) {
       console.error("Errore durante la richiesta di inserimento", error);
+      toastr.error('The error: <strong style="color: black;">' + error + '</strong>\n occurred. Please, try again or call an engineer', 'Invio fallito', { closeButton: true, progressBar: true, timeOut: 5000, extendedTimeOut: 2000});
+
+      //window.alert("The error: '" + error + "'\n occurred. Please, try again or call an engineer")
     }
     
   };
@@ -99,6 +116,8 @@ const MyForm = () => {
             type="tel"
             id="telephone_number"
             name="telephone_number"
+            pattern="\d{10}"
+            title="Il numero deve essere di 10 cifre"
             value={formData.telephone_number}
             onChange={handleInputChange}
           />
@@ -121,6 +140,8 @@ const MyForm = () => {
             id="cap"
             name="cap"
             value={formData.cap}
+            pattern="\d{5}"
+            title="Il numero deve essere di 5 cifre"
             onChange={handleInputChange}
             required
           />

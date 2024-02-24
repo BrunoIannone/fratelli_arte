@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import "./table.css"; // Import the external CSS file for styling
-
+import { useTranslation, Trans } from 'react-i18next';
+import toastr from "toastr";
+import 'toastr/build/toastr.min.css';
 
 const Table = () => {
+  const { t } = useTranslation();
+
   // Example customer data
   const [customers, setCustomers] = useState([
     {
@@ -82,7 +86,7 @@ const Table = () => {
     });
   };
   
-  const handleFetch = async (query) => {
+  const handleFetch = async (query:string) => {
     try {
       const result = await fetch(
         `http://localhost:3000/recoverUserData/${query}`
@@ -105,9 +109,15 @@ const Table = () => {
     }
   };
   const handleCheckAll = () => {
+    
     var query = "SELECT ";
     var isActive = false;
-
+    console.log(selectedAttributes,"EGOLO");
+    if (selectedAttributes.length ===0)
+    {
+      toastr.warning("Non hai selezionato nessun attributo!", "Selezione vuota",{ closeButton: true, progressBar: true, timeOut: 5000, extendedTimeOut: 2000});
+      return;
+    }
     // Log a message for each selected attribute
     selectedAttributes.forEach((attribute) => {
       console.log(`Checkbox for attribute "${attribute}" is Active`);
@@ -147,10 +157,10 @@ const Table = () => {
 
   return (
     <div className="table-container">
-      <h1>Customer Table</h1>
+      <h1>{t("CustomerTable")}</h1>
       <div className="attribute-selector">
         <button onClick={handleCheckAll}>
-          {checkboxState ? "Uncheck All" : "Check All"}
+          {t("ShowResult")}
         </button>
         {Object.keys(customers[0]).map((attribute) => (
           <label key={attribute} className="attribute-checkbox">
@@ -161,7 +171,7 @@ const Table = () => {
               value={attribute}
               disabled={checkboxState}
             />
-            {attribute}
+            {t(attribute)}
           </label>
         ))}
       </div>
@@ -174,12 +184,14 @@ const Table = () => {
 };
 
 const CustomerTable = ({ customers, selectedAttributes }) => {
+  const { t } = useTranslation();
+
   return (
     <table className="customer-table">
       <thead>
         <tr>
           {selectedAttributes.map((attribute) => (
-            <th key={attribute}>{attribute}</th>
+            <th key={attribute}>{t(attribute)}</th>
           ))}
         </tr>
       </thead>
