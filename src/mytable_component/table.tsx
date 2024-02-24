@@ -5,14 +5,14 @@ import "./table.css"; // Import the external CSS file for styling
 import { useTranslation} from 'react-i18next';
 import toastr from "toastr";
 import 'toastr/build/toastr.min.css';
-import "./css/manage_customers.css"
-
+import "../css/manage_customers.css"
+import {Customer} from "./customer"
 const Table = () => {
   
   const { t } = useTranslation();
 
   // Example customer data
-  const [customers, setCustomers] = useState([
+  const [customers, setCustomers] = useState<Customer[]>([
     {
       customer_id: "",
       first_name: "",
@@ -40,14 +40,16 @@ const Table = () => {
     active: "",
   };
 
-  const [selectedAttributes, setSelectedAttributes] = useState([]);
-  const [checkboxState, setCheckboxState] = useState(false);
+  const [selectedAttributes, setSelectedAttributes] = useState<string[]>([]);
+  //const [checkboxState, setCheckboxState] = useState<boolean>(false);
+  const [checkboxState] = useState<boolean>(false);
+
 
   const handleAttributeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedAttribute = event.target.value;
   
     setSelectedAttributes((prevAttributes) => {
-      let updatedAttributes;
+      let updatedAttributes: string[]; 
       if (prevAttributes.includes(selectedAttribute)) {
         // If the attribute is already selected, remove it
         updatedAttributes = prevAttributes.filter((attr) => attr !== selectedAttribute);
@@ -78,9 +80,9 @@ const Table = () => {
       // Update the state with the sorted attributes
       setCustomers((prevCustomers) => {
         return prevCustomers.map((customer) => {
-          const updatedCustomer = {};
+          const updatedCustomer: { [key: string]: any } = {};
           sortedAttributes.forEach((attr) => {
-            updatedCustomer[attr] = customer[attr];
+          updatedCustomer[attr] = customer[attr as keyof typeof customer];
           });
           return { ...customer, ...updatedCustomer }; // Merge existing attributes with updated ones
         });
@@ -151,7 +153,8 @@ const Table = () => {
     }
 
     console.log(query);
-    const data = handleFetch(query);
+    //const data = handleFetch(query);
+    handleFetch(query);
 
     // Rest of your code
     // setSelectedAttributes((prevAttributes) =>
@@ -187,7 +190,7 @@ const Table = () => {
   );
 };
 
-const CustomerTable = ({ customers, selectedAttributes }) => {
+const CustomerTable = ({ customers, selectedAttributes }: { customers: Customer[], selectedAttributes: string[] }) => {
   const { t } = useTranslation();
 
   return (
