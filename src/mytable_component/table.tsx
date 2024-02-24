@@ -97,7 +97,7 @@ const Table = () => {
   const handleFetch = async (query:string) => {
     try {
       const result = await fetch(
-        `http://localhost:3000/recoverUserData/${query}`
+        `http://192.168.1.18:3000/recoverUserData/${query}`
       );
       var data = await result.json();
       console.log(data);
