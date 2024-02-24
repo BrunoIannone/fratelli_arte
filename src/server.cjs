@@ -9,11 +9,12 @@ const bodyParser = require("body-parser");
 app.use(cors());
 app.use(bodyParser.json());
 
+
 app.get("/recoverUserData/:query", async (req, res) => {
   try {
     // Chiamata alla funzione asincrona del modulo db.js
-    const query = req.params.query
-    console.log(query)
+    const query = req.params.query;
+    console.log(query);
     const q = await db.recoverUserData(query);
 
     // Rispondi al client
@@ -27,29 +28,31 @@ app.use(bodyParser.json());
 
 app.post("/addFidelityCard", async (req, res) => {
   const formData = req.body;
-try{
-  const q = await db.addFidelityCard();
-  res.send(q);
-} catch (error) {
-  console.error(error);
-  res.status(500).send("Errore durante l'esecuzione della query");
-}
-  
+  try {
+    const q = await db.addFidelityCard();
+    res.send(q);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Errore durante l'esecuzione della query");
+  }
 });
 app.post("/addUser", async (req, res) => {
   try {
     const formData = req.body;
     const q = await db.addUser(formData, res);
-    if (q){
-
+    if (q) {
       res.status(200).json({ success: true, message: "Daje" });
-    
     }
   } catch (error) {
-
     console.error(error);
-    console.log(error.errno)
-    res.status(500).json({ success: false, message: "Errore durante l'esecuzione della query", errno:error.errno});
+    console.log(error.errno);
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: "Errore durante l'esecuzione della query",
+        errno: error.errno,
+      });
   }
 });
 

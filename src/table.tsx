@@ -3,8 +3,9 @@ import "./table.css"; // Import the external CSS file for styling
 import { useTranslation, Trans } from 'react-i18next';
 import toastr from "toastr";
 import 'toastr/build/toastr.min.css';
-
+import "./css/manage_customers.css"
 const Table = () => {
+  
   const { t } = useTranslation();
 
   // Example customer data

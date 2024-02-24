@@ -54,7 +54,7 @@ i18n
           cap: "CAP",
           customer_id: "ID Cliente",
           email: "E-mail",
-          registration: "Registrazione",
+          registration: "Registra Cliente",
           subscribed: "Iscritto",
           unsubscribed: "Non iscritto",
           //#####################################
