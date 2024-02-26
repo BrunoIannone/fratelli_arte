@@ -42,8 +42,7 @@ const Table = () => {
   };
 
   const [selectedAttributes, setSelectedAttributes] = useState<string[]>([]);
-  //const [checkboxState, setCheckboxState] = useState<boolean>(false);
-  const [checkboxState] = useState<boolean>(false);
+  const [checkboxState, _setCheckboxState] = useState<boolean>(false);
 
 
   const handleAttributeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
