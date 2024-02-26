@@ -116,7 +116,7 @@ const MyForm = () => {
             type="tel"
             id="telephone_number"
             name="telephone_number"
-            pattern="\d{10}"
+            pattern="\d{9,10}"
             title="Il numero deve essere di 10 cifre"
             value={formData.telephone_number}
             onChange={handleInputChange}

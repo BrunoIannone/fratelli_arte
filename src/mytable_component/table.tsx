@@ -49,6 +49,7 @@ const Table = () => {
   const handleAttributeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedAttribute = event.target.value;
     console.log(selectedAttribute, "ATT")
+
     setSelectedAttributes((prevAttributes) => {
       console.log(prevAttributes, "ATT")
       let updatedAttributes: string[]; 
@@ -94,13 +95,22 @@ const Table = () => {
     });
   };
   
+  // AUX Function for retrieving user data according to selected attributes
   const handleFetch = async (query:string) => {
     try {
-      const result = await fetch(
-        `http://192.168.1.18:3000/recoverUserData/${query}`
-      );
+      const timeoutPromise = new Promise((_resolve, reject) => {
+        setTimeout(() => {
+            reject(new Error('Request timed out'));
+        }, 10000); // 5 seconds timeout
+    });
+
+    const fetchPromise = fetch(`http://192.168.1.18:3000/recoverUserData/${query}`);
+
+    const result: any = await Promise.race([fetchPromise, timeoutPromise]);
+      
+
+      console.log(result,"RESULT")
       var data = await result.json();
-      console.log(data);
 
       for (let i = 0; i < data.length; i++) {
         data[i] = Object.assign({}, emptyCustomer, data[i]);
@@ -109,11 +119,11 @@ const Table = () => {
         }
       }
 
-      console.log(data);
+      console.log(data,"HERE");
 
       setCustomers(data);
     } catch (error) {
-      console.error("Errore durante la richiesta Fetch:", error);
+      toastr.error("Operazione fallita, il server non risponde: provare di nuovo (error occurred in recoverUserData with " + error + ")", "Il server non risponde",{ closeButton: true, progressBar: true, timeOut: 5000, extendedTimeOut: 2000});
     }
   };
   const handleCheckAll = () => {
@@ -140,7 +150,7 @@ const Table = () => {
         query += attribute + ",";
       }
     });
-    console.log(query);
+    //console.log(query,"Q");
 
     // Remove the trailing comma
 
@@ -154,7 +164,7 @@ const Table = () => {
       query += " FROM customer";
     }
 
-    console.log(query);
+    console.log(query,"Q");
     //const data = handleFetch(query);
     handleFetch(query);
 
@@ -192,8 +202,20 @@ const Table = () => {
   );
 };
 
+// Inside the CustomerTable component
 const CustomerTable = ({ customers, selectedAttributes }: { customers: Customer[], selectedAttributes: string[] }) => {
   const { t } = useTranslation();
+
+  const calculateAge = (dateOfBirth: string): number => {
+    const today = new Date();
+    const birthDate = new Date(dateOfBirth);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const month = today.getMonth() - birthDate.getMonth();
+    if (month < 0 || (month === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  };
 
   return (
     <table className="customer-table">
@@ -207,14 +229,22 @@ const CustomerTable = ({ customers, selectedAttributes }: { customers: Customer[
       <tbody>
         {customers.map((customer, index) => (
           <tr key={index}>
-            {selectedAttributes.map((attribute) => (
-              <td key={attribute}>{customer[attribute]}</td>
-            ))}
+            {selectedAttributes.map((attribute) => {
+              if (attribute === "date_birth") {
+                const age = calculateAge(customer[attribute]);
+                // Apply conditional styling based on age
+                const className = age >= 70 ? "elderly-customer" : "";
+                return <td key={attribute} className={className}>{t(customer[attribute])}</td>;
+              } else {
+                return <td key={attribute}>{t(customer[attribute])}</td>;
+              }
+            })}
           </tr>
         ))}
       </tbody>
     </table>
   );
 };
+
 
 export default Table;
