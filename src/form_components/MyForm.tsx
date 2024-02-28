@@ -63,10 +63,7 @@ const MyForm = () => {
           
 
     } catch (error) {
-      console.error("Errore durante la richiesta di inserimento", error);
       toastr.error('The error: <strong style="color: black;">' + error + '</strong>\n occurred. Please, try again or call an engineer', 'Invio fallito', { closeButton: true, progressBar: true, timeOut: 5000, extendedTimeOut: 2000});
-
-      //window.alert("The error: '" + error + "'\n occurred. Please, try again or call an engineer")
     }
     
   };
