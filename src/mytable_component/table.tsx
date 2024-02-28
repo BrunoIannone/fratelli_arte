@@ -61,7 +61,6 @@ const Table = () => {
     const selectedAttribute = event.target.value;
   
     setSelectedAttributes((prevAttributes) => {
-      console.log("PENE")
       const selectedSet = new Set(prevAttributes);
       if (selectedSet.has(selectedAttribute)) {
         selectedSet.delete(selectedAttribute);

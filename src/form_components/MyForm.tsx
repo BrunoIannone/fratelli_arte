@@ -36,9 +36,7 @@ const MyForm = () => {
       });
       
       const responseData = await response.json();
-      console.log("LOGGO:");
 
-      console.log(responseData);
       if (response.ok){
         setFormData(
           {
@@ -51,7 +49,6 @@ const MyForm = () => {
           cap: "",
           date_birth: "",}); 
           toastr.success('Dati inviati correttamente!', 'Invio Riuscito');
-          //console.log(formData);
           }
       else{
         if (responseData.errno === 1062){

@@ -46,6 +46,7 @@ const CustomerTable = ({ customers, selectedAttributes }: { customers: Customer[
 
                 }
                 
+                
                 else {
                  
                   return <td key={attribute}>{customer[attribute]}</td>;
