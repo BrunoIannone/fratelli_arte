@@ -50,7 +50,9 @@
 .elderly-customer {
   background-color: yellow;
 }
-
+.unsubscribed-customer {
+  background-color: rgb(255, 0, 0);
+}
 /* Styling for search fields container */
 .search-fields-container {
   display: flex;

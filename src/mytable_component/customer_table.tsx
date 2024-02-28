@@ -41,8 +41,10 @@ const CustomerTable = ({ customers, selectedAttributes }: { customers: Customer[
                   return <td key={attribute} className={className}>{customer[attribute]}</td>;
                 } 
                 else if (attribute === 'active'){
-                    
-                    return <td key={attribute}>{t(customer[attribute])}</td>;
+                    const age = calculateAge(customer[attribute]);
+                    const className = age >= 1 ? "unsubscribed-customer" : "";
+
+                    return <td key={attribute} className={className}>{customer[attribute]}</td>;
 
                 }
                 

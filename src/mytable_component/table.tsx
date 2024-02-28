@@ -130,6 +130,9 @@ const Table = () => {
         if (data[i].date_birth != "") {
           data[i].date_birth = data[i].date_birth.split("T")[0];
         }
+        if (data[i].active != "") {
+          data[i].active = data[i].active.split("T")[0];
+        }
       }
 
       if (data.length === 0) {
@@ -216,7 +219,7 @@ const Table = () => {
     // Remove the trailing comma
 
     if (isActive) {
-      query += " IF(active, 'subscribed', 'unsubscribed') as active";
+      query += " last_subscription as active";
 
       query +=
         " FROM customer join fidelity_card on customer.id_fidelity_card = fidelity_card.id_fidelity_card";
