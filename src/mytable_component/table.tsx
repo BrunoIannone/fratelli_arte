@@ -1,18 +1,20 @@
-//import React, { useState } from "react";
-//import { useTranslation, Trans } from 'react-i18next';
-import { useState } from "react";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import "./table.css"; // Import the external CSS file for styling
-import { useTranslation} from 'react-i18next';
 import toastr from "toastr";
-import 'toastr/build/toastr.min.css';
+import "toastr/build/toastr.min.css";
 import "../css/manage_customers.css";
-import {Customer} from "./customer";
+import { Customer } from "./customer";
+import CustomerTable from "./customer_table";
+/**
+ * Class for customers table showing
+ *
+ * @return {*} Built table with customers data after the query
+ */
 
 const Table = () => {
-  
   const { t } = useTranslation();
 
-  // Example customer data
   const [customers, setCustomers] = useState<Customer[]>([
     {
       customer_id: "",
@@ -44,71 +46,84 @@ const Table = () => {
   const [selectedAttributes, setSelectedAttributes] = useState<string[]>([]);
   const [checkboxState, _setCheckboxState] = useState<boolean>(false);
 
+  const [nameValue, setNameValue] = useState("");
+  const [surnameValue, setSurnameValue] = useState("");
+  const [telNumValue, setTelNumValue] = useState("");
 
-  const handleAttributeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  /**
+   *Function that handles selected attributes checkboxes
+   *
+   * @param {React.ChangeEvent<HTMLInputElement>} event
+   */
+   const handleAttributeChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const selectedAttribute = event.target.value;
-    console.log(selectedAttribute, "ATT")
-
+  
     setSelectedAttributes((prevAttributes) => {
-      console.log(prevAttributes, "ATT")
-      let updatedAttributes: string[]; 
-      if (prevAttributes.includes(selectedAttribute)) {
-        // If the attribute is already selected, remove it
-        updatedAttributes = prevAttributes.filter((attr) => attr !== selectedAttribute);
+      console.log("PENE")
+      const selectedSet = new Set(prevAttributes);
+      if (selectedSet.has(selectedAttribute)) {
+        selectedSet.delete(selectedAttribute);
       } else {
-        // If the attribute is not selected, add it at the end
-        updatedAttributes = [...prevAttributes, selectedAttribute];
+        selectedSet.add(selectedAttribute);
       }
   
-      // Define the default order of attributes
-      const defaultAttributeOrder = [
-        "customer_id",
-        "first_name",
-        "last_name",
-        "address",
-        "email",
-        "id_fidelity_card",
-        "telephone_number",
-        "cap",
-        "date_birth",
-        "active",
-      ];
+      const defaultAttributeOrder: { [key: string]: number } = {
+        customer_id: 0,
+        first_name: 1,
+        last_name: 2,
+        address: 3,
+        email: 4,
+        id_fidelity_card: 5,
+        telephone_number: 6,
+        cap: 7,
+        date_birth: 8,
+        active: 9,
+      };
   
-      // Sort the selected attributes based on the default order
-      const sortedAttributes = defaultAttributeOrder.filter((attr) =>
-        updatedAttributes.includes(attr)
+      const sortedAttributes = Array.from(selectedSet).sort(
+        (a, b) => defaultAttributeOrder[a] - defaultAttributeOrder[b]
       );
   
-      // Update the state with the sorted attributes
-      setCustomers((prevCustomers) => {
-        return prevCustomers.map((customer) => {
-          const updatedCustomer: { [key: string]: any } = {};
-          sortedAttributes.forEach((attr) => {
-          updatedCustomer[attr] = customer[attr as keyof typeof customer];
-          });
-          return { ...customer, ...updatedCustomer }; // Merge existing attributes with updated ones
-        });
-      });
+      /*setCustomers((prevCustomers) =>
+        prevCustomers.map((customer) =>
+          sortedAttributes.reduce((updatedCustomer, attr) => {
+            updatedCustomer[attr] = customer[attr as keyof typeof customer];
+            console.log(prevCustomers,"PREV")
+
+            return updatedCustomer;
+          }, { ...customer })
+          
+        )
+
+      );*/
   
       return sortedAttributes;
     });
   };
   
-  // AUX Function for retrieving user data according to selected attributes
-  const handleFetch = async (query:string) => {
+
+  /**
+   *AUX Function for retrieving user data according to selected attributes
+   *
+   * @param {string} query
+   */
+
+  const fetchUserData = async (query: string) => {
     try {
       const timeoutPromise = new Promise((_resolve, reject) => {
         setTimeout(() => {
-            reject(new Error('Request timed out'));
-        }, 10000); // 5 seconds timeout
-    });
+          reject(new Error("Request timed out"));
+        }, 10000); // 10 seconds timeout
+      });
 
-    const fetchPromise = fetch(`http://192.168.1.18:3000/recoverUserData/${query}`);
+      const fetchPromise = fetch(
+        `http://192.168.1.18:3000/recoverUserData/${query}`
+      );
 
-    const result: any = await Promise.race([fetchPromise, timeoutPromise]);
-      
+      const result: any = await Promise.race([fetchPromise, timeoutPromise]);
 
-      console.log(result,"RESULT")
       var data = await result.json();
 
       for (let i = 0; i < data.length; i++) {
@@ -118,43 +133,75 @@ const Table = () => {
         }
       }
 
-      console.log(data,"HERE");
-      if(data.length === 0){
-        toastr.info("Nessun utente con i parametri selezionati è stato trovato", "Utente non trovato",{ closeButton: true, progressBar: true, timeOut: 5000, extendedTimeOut: 2000});
+      if (data.length === 0) {
+        toastr.info(
+          "Nessun utente con i parametri selezionati è stato trovato",
+          "Utente non trovato",
+          {
+            closeButton: true,
+            progressBar: true,
+            timeOut: 5000,
+            extendedTimeOut: 2000,
+          }
+        );
+
         setCustomers([
-        {
-          customer_id: "",
-          first_name: "",
-          last_name: "",
-          address: "",
-          email: "",
-          id_fidelity_card: "",
-          telephone_number: "",
-          cap: "",
-          date_birth: "",
-          active: "",
-        }]);
-      }
-      else{
-      setCustomers(data);
+          {
+            customer_id: "",
+            first_name: "",
+            last_name: "",
+            address: "",
+            email: "",
+            id_fidelity_card: "",
+            telephone_number: "",
+            cap: "",
+            date_birth: "",
+            active: "",
+          },
+        ]);
+      } else {
+        setCustomers(data);
       }
     } catch (error) {
-      toastr.error("Operazione fallita, il server non risponde: provare di nuovo (error occurred in recoverUserData with " + error + ")", "Il server non risponde",{ closeButton: true, progressBar: true, timeOut: 5000, extendedTimeOut: 2000});
+      toastr.error(
+        "Operazione fallita, il server non risponde: provare di nuovo (error occurred in recoverUserData with " +
+          error +
+          ")",
+        "Il server non risponde",
+        {
+          closeButton: true,
+          progressBar: true,
+          timeOut: 5000,
+          extendedTimeOut: 2000,
+        }
+      );
     }
   };
-  const handleCheckAll = () => {
-    
+
+  /**
+   *Function that builds the query based on the selected attributes and search criteria
+   *
+   * @return {*}
+   */
+  const buildQueryFromAttributes = () => {
     var query = "SELECT ";
     var isActive = false;
-    console.log(selectedAttributes,"EGOLO");
-    if (selectedAttributes.length === 0)
-    {
-      toastr.warning("Non hai selezionato nessun attributo!", "Selezione vuota",{ closeButton: true, progressBar: true, timeOut: 5000, extendedTimeOut: 2000});
+
+    if (selectedAttributes.length === 0) {
+      toastr.warning(
+        "Non hai selezionato nessun attributo!",
+        "Selezione vuota",
+        {
+          closeButton: true,
+          progressBar: true,
+          timeOut: 5000,
+          extendedTimeOut: 2000,
+        }
+      );
       return;
     }
     // Log a message for each selected attribute
     selectedAttributes.forEach((attribute) => {
-      console.log(`Checkbox for attribute "${attribute}" is Active`);
       if (attribute === "active") {
         isActive = true;
       }
@@ -166,7 +213,6 @@ const Table = () => {
         query += attribute + ",";
       }
     });
-    //console.log(query,"Q");
 
     // Remove the trailing comma
 
@@ -179,41 +225,25 @@ const Table = () => {
       query = query.slice(0, -1);
       query += " FROM customer";
     }
-    query += " WHERE 0=0 "
-    console.log(nameValue)
-    if (nameValue!== ''){
-      
-      query += "and first_name = " + "'" + nameValue + "'"
-    }
-    if (surnameValue!== ''){
-      
-      query += " and last_name = " + "'" + surnameValue + "'"
-    }
-    if (telNumValue!== ''){
-      
-      query += " and telephone_number = " + "'" + telNumValue + "'"
-    }
-    
-    
-    console.log(query,"Q");
-    //const data = handleFetch(query);
-    handleFetch(query);
+    query += " WHERE 0=0 ";
 
-    // Rest of your code
-    // setSelectedAttributes((prevAttributes) =>
-    //   checkboxState ? [] : Object.keys(customers[0])
-    // );
+    if (nameValue !== "") {
+      query += "and first_name = " + "'" + nameValue + "'";
+    }
+    if (surnameValue !== "") {
+      query += " and last_name = " + "'" + surnameValue + "'";
+    }
+    if (telNumValue !== "") {
+      query += " and telephone_number = " + "'" + telNumValue + "'";
+    }
+
+    fetchUserData(query);
   };
-  const [nameValue, setNameValue] = useState('');
-  const [surnameValue, setSurnameValue] = useState('');
-  const [telNumValue, setTelNumValue] = useState('');
 
   return (
     <div className="table-container">
       <h1>{t("CustomerTable")}</h1>
       <div className="attribute-selector">
-        
-        
         {Object.keys(customers[0]).map((attribute) => (
           <label key={attribute} className="attribute-checkbox">
             <input
@@ -227,87 +257,45 @@ const Table = () => {
           </label>
         ))}
       </div>
+      
+      {selectedAttributes.length > 0 && (
       <CustomerTable
         customers={customers}
         selectedAttributes={selectedAttributes}
+        
       />
-      
+      )}
+      {/* Search section */}
       <div className="search-fields-container">
         {/* Field for Name */}
-        
-        <span className = "cerca-per" > Cerca per:</span>
-        <input id="name-search-field"
+
+        <span className="cerca-per"> Cerca per:</span>
+        <input
+          id="name-search-field"
           type="text"
           placeholder={t("first_name")}
           value={nameValue}
           onChange={(e) => setNameValue(e.target.value)}
         />
         {/* Field for Surname */}
-        <input id="surname-search-field"
+        <input
+          id="surname-search-field"
           type="text"
           placeholder={t("last_name")}
           value={surnameValue}
           onChange={(e) => setSurnameValue(e.target.value)}
         />
-        <input id="tel-num-search-field"
+        <input
+          id="tel-num-search-field"
           type="text"
           placeholder={t("telephone_number")}
           value={telNumValue}
           onChange={(e) => setTelNumValue(e.target.value)}
         />
       </div>
-      <button onClick={handleCheckAll}>
-          {t("ShowResult")}
-        </button>
+      <button onClick={buildQueryFromAttributes}>{t("ShowResult")}</button>
     </div>
-    
-    
   );
 };
-
-// Inside the CustomerTable component
-const CustomerTable = ({ customers, selectedAttributes }: { customers: Customer[], selectedAttributes: string[] }) => {
-  const { t } = useTranslation();
-
-  const calculateAge = (dateOfBirth: string): number => {
-    const today = new Date();
-    const birthDate = new Date(dateOfBirth);
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const month = today.getMonth() - birthDate.getMonth();
-    if (month < 0 || (month === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
-    }
-    return age;
-  };
-
-  return (
-    <table className="customer-table">
-      <thead>
-        <tr>
-          {selectedAttributes.map((attribute) => (
-            <th key={attribute}>{t(attribute)}</th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {customers.map((customer, index) => (
-          <tr key={index}>
-            {selectedAttributes.map((attribute) => {
-              if (attribute === "date_birth") {
-                const age = calculateAge(customer[attribute]);
-                // Apply conditional styling based on age
-                const className = age >= 70 ? "elderly-customer" : "";
-                return <td key={attribute} className={className}>{t(customer[attribute])}</td>;
-              } else {
-                return <td key={attribute}>{t(customer[attribute])}</td>;
-              }
-            })}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
-};
-
 
 export default Table;
