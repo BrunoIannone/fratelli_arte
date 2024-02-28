@@ -1,19 +1,22 @@
+/* General container styling */
 .table-container {
   display: block;
   margin: auto;
   padding: 20px;
-  justify-content: center;
   text-align: center;
 }
 
+/* Styling for attribute selector */
 .attribute-selector {
   margin-top: 15px;
   display: flex;
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
   justify-content: space-around;
 }
 
+/* Styling for attribute checkboxes */
 .attribute-checkbox {
-  margin-right: 10px;
+  margin-bottom: 10px; /* Increase spacing between checkboxes */
   display: flex;
   align-items: center;
 }
@@ -21,14 +24,16 @@
 /* Style the checkboxes */
 .attribute-checkbox input {
   margin-right: 5px;
-  width: 20px; /* Set a fixed width for the checkboxes */
-  height: 20px; /* Set a fixed height for the checkboxes */
+  width: 20px;
+  height: 20px;
 }
 
+/* Styling for the customer table */
 .customer-table {
   margin: auto;
   margin-top: 20px;
   border-collapse: collapse;
+  width: 100%; /* Ensure table fills the container */
 }
 
 .customer-table th,
@@ -41,6 +46,56 @@
   background-color: #f2f2f2;
 }
 
+/* Styling for elderly customers */
 .elderly-customer {
-  background-color: yellow; /* Example color for elderly customers */
+  background-color: yellow;
+}
+
+/* Styling for search fields container */
+.search-fields-container {
+  display: flex;
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+  align-items: center;
+  font-family: Arial, sans-serif;
+  margin-top: 15px;
+}
+
+.search-fields-container label {
+  margin-right: 10px;
+  font-weight: bold;
+  background-color: brown;
+}
+
+/* Styling for search input */
+.search-fields-container input[type="text"] {
+  flex: 1; /* Take remaining space */
+  padding: 8px;
+  border: 1px solid #7f7b7b;
+  border-radius: 4px;
+  font-size: 14px;
+  max-width: 200px; /* Limit input width */
+}
+
+/* Styling for placeholder text */
+.search-fields-container input[type="text"]::placeholder {
+  color: #424040;
+}
+
+/* Styling for input fields on focus */
+.search-fields-container input[type="text"]:focus {
+  outline: none;
+  border-color: blue;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Styling for 'Cerca Per' */
+.search-fields-container .cerca-per {
+  margin-right: 10px;
+}
+/* Media query for smartphone visualization */
+@media only screen and (max-width: 600px) {
+  .search-fields-container {
+    flex-direction: column; /* Stack items vertically */
+    align-items: flex-start; /* Align items to the start */
+  }
 }

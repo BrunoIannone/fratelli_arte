@@ -120,6 +120,7 @@ const MyForm = () => {
             title="Il numero deve essere di 10 cifre"
             value={formData.telephone_number}
             onChange={handleInputChange}
+            
           />
         </div>
         <div className="form-group">

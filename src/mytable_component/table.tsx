@@ -119,8 +119,25 @@ const Table = () => {
       }
 
       console.log(data,"HERE");
-
+      if(data.length === 0){
+        toastr.info("Nessun utente con i parametri selezionati è stato trovato", "Utente non trovato",{ closeButton: true, progressBar: true, timeOut: 5000, extendedTimeOut: 2000});
+        setCustomers([
+        {
+          customer_id: "",
+          first_name: "",
+          last_name: "",
+          address: "",
+          email: "",
+          id_fidelity_card: "",
+          telephone_number: "",
+          cap: "",
+          date_birth: "",
+          active: "",
+        }]);
+      }
+      else{
       setCustomers(data);
+      }
     } catch (error) {
       toastr.error("Operazione fallita, il server non risponde: provare di nuovo (error occurred in recoverUserData with " + error + ")", "Il server non risponde",{ closeButton: true, progressBar: true, timeOut: 5000, extendedTimeOut: 2000});
     }
@@ -162,7 +179,22 @@ const Table = () => {
       query = query.slice(0, -1);
       query += " FROM customer";
     }
-
+    query += " WHERE 0=0 "
+    console.log(nameValue)
+    if (nameValue!== ''){
+      
+      query += "and first_name = " + "'" + nameValue + "'"
+    }
+    if (surnameValue!== ''){
+      
+      query += " and last_name = " + "'" + surnameValue + "'"
+    }
+    if (telNumValue!== ''){
+      
+      query += " and telephone_number = " + "'" + telNumValue + "'"
+    }
+    
+    
     console.log(query,"Q");
     //const data = handleFetch(query);
     handleFetch(query);
@@ -172,14 +204,16 @@ const Table = () => {
     //   checkboxState ? [] : Object.keys(customers[0])
     // );
   };
+  const [nameValue, setNameValue] = useState('');
+  const [surnameValue, setSurnameValue] = useState('');
+  const [telNumValue, setTelNumValue] = useState('');
 
   return (
     <div className="table-container">
       <h1>{t("CustomerTable")}</h1>
       <div className="attribute-selector">
-        <button onClick={handleCheckAll}>
-          {t("ShowResult")}
-        </button>
+        
+        
         {Object.keys(customers[0]).map((attribute) => (
           <label key={attribute} className="attribute-checkbox">
             <input
@@ -197,7 +231,37 @@ const Table = () => {
         customers={customers}
         selectedAttributes={selectedAttributes}
       />
+      
+      <div className="search-fields-container">
+        {/* Field for Name */}
+        
+        <span className = "cerca-per" > Cerca per:</span>
+        <input id="name-search-field"
+          type="text"
+          placeholder={t("first_name")}
+          value={nameValue}
+          onChange={(e) => setNameValue(e.target.value)}
+        />
+        {/* Field for Surname */}
+        <input id="surname-search-field"
+          type="text"
+          placeholder={t("last_name")}
+          value={surnameValue}
+          onChange={(e) => setSurnameValue(e.target.value)}
+        />
+        <input id="tel-num-search-field"
+          type="text"
+          placeholder={t("telephone_number")}
+          value={telNumValue}
+          onChange={(e) => setTelNumValue(e.target.value)}
+        />
+      </div>
+      <button onClick={handleCheckAll}>
+          {t("ShowResult")}
+        </button>
     </div>
+    
+    
   );
 };
 
