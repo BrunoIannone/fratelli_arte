@@ -55,7 +55,24 @@ app.post("/addUser", async (req, res) => {
       });
   }
 });
-
+app.post('/shutdown', (req, res) => {
+  try {
+    exec('shutdown -h now', (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Command error: ${error.message}`);
+        return res.status(500).send('Internal server error');
+      }
+      
+      console.log(`Command output: ${stdout}`);
+      console.error(`Command errors: ${stderr}`);
+      
+      res.status(200).send('Shutdown command executed successfully');
+    });
+  } catch (error) {
+    console.error(`Error in try-catch block: ${error.message}`);
+    return res.status(500).send('Internal server error');
+  }
+});
 // ... altre configurazioni ...
 
 // Avvia il server
