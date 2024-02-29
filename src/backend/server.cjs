@@ -6,11 +6,12 @@ const cors = require("cors"); // Importa il pacchetto cors
 
 const db = require("./database.cjs"); // Assicurati di utilizzare il percorso corretto
 const bodyParser = require("body-parser");
+const app = express(); // Create Express application instance
 
 // ... altre configurazioni ...
 app.use(cors());
 app.use(bodyParser.json());
-app.use(express())
+
 
 app.get("/recoverUserData/:query", async (req, res) => {
   try {
