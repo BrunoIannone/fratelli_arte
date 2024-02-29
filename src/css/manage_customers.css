@@ -24,4 +24,25 @@
   button:hover {
     background-color: #45a049;
   }
+  .shutdown-button-container {
+    display: flex;
+    justify-content: flex-end; /* Move container to the right */
+  }
+  .shutdown-button:hover{
+    background-color: gray;
+  }
+  .shutdown-button {
+    width: 50px;
+    height: 50px;
+    display: flex; /* Use flexbox */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    background-color: white;
+    
+  }
   
+  .shutdown-button img {
+    max-width: 45px;
+    max-height: 45px;
+  }
+

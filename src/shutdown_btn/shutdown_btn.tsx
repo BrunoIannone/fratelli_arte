@@ -15,7 +15,7 @@ class ShutdownButton extends Component<ShutdownButtonProps> {
       },
       body: JSON.stringify({ action: 'shutdown' }) // You might need to adjust this payload based on your server's requirements
     })
-    .then(response => {
+    .then(_response => {
       // Handle response as needed
       toastr.success('Richiesta inviata con successo.', "Invio richiesta di spegnimento", { closeButton: true, progressBar: true, timeOut: 5000, extendedTimeOut: 2000});
     })

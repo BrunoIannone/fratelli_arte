@@ -6,7 +6,7 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     rollupOptions: {
-      input: ['src/main.tsx', './index.html',"./manage_customers.html","./src/manage_customers.tsx","./src/button.tsx","./src/mytable_component/table.tsx"]
+      input: ['src/main.tsx', './index.html',"./manage_customers.html","./src/manage_customers.tsx","./src/mytable_component/table.tsx"]
     }
   }
 });

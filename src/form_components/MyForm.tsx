@@ -25,7 +25,9 @@ const MyForm = () => {
  
   const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+    formData.address = formData.address.trim()
+    formData.first_name = formData.first_name.trim()
+    formData.last_name = formData.last_name.trim()
     try {
       const response = await fetch("http://192.168.1.18:3000/addUser", {
         method: "POST",

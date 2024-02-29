@@ -127,12 +127,12 @@ const Table = () => {
 
       for (let i = 0; i < data.length; i++) {
         data[i] = Object.assign({}, emptyCustomer, data[i]);
-        if (data[i].date_birth != "") {
-          data[i].date_birth = data[i].date_birth.split("T")[0];
-        }
-        if (data[i].active != "") {
-          data[i].active = data[i].active.split("T")[0];
-        }
+        // if (data[i].date_birth != "") {
+        //   data[i].date_birth = data[i].date_birth.split("T")[0];
+        // }
+        // if (data[i].active != "") {
+        //   data[i].active = data[i].active.split("T")[0];
+        // }
       }
 
       if (data.length === 0) {

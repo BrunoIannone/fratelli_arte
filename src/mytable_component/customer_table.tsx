@@ -3,9 +3,9 @@ import { useTranslation} from 'react-i18next';
 import { Customer} from './customer';
 import "../css/manage_customers.css";
 
-const calculateAge = (dateOfBirth: string): number => {
+const calculateAge = (dateOfBirth: Date): number => {
     const today = new Date();
-    const birthDate = new Date(dateOfBirth);
+    const birthDate = dateOfBirth;
     let age = today.getFullYear() - birthDate.getFullYear();
     const month = today.getMonth() - birthDate.getMonth();
     if (month < 0 || (month === 0 && today.getDate() < birthDate.getDate())) {
@@ -13,6 +13,20 @@ const calculateAge = (dateOfBirth: string): number => {
     }
     return age;
   };
+  function formatDate(date: Date) {
+    // Ottieni giorno, mese e anno dalla data
+    const day = date.getDate();
+    // Aggiungi 1 al mese poiché i mesi in JavaScript vanno da 0 a 11
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+
+    // Formatta giorno, mese e anno in stringa
+    const formattedDay = (day < 10 ? '0' : '') + day;
+    const formattedMonth = (month < 10 ? '0' : '') + month;
+
+    // Restituisci la data formattata
+    return formattedDay + '-' + formattedMonth + '-' + year;
+}
 
 const CustomerTable = ({ customers, selectedAttributes }: { customers: Customer[], selectedAttributes: string[] }) => {
     const { t } = useTranslation();
@@ -35,16 +49,18 @@ const CustomerTable = ({ customers, selectedAttributes }: { customers: Customer[
 
                 }
                 else if (attribute === "date_birth") {
-                  const age = calculateAge(customer[attribute]);
+                  const dateOfBirth = new Date(customer[attribute]);
+                  const age = calculateAge(dateOfBirth);
                   // Apply conditional styling based on age
                   const className = age >= 70 ? "elderly-customer" : "";
-                  return <td key={attribute} className={className}>{customer[attribute]}</td>;
+                  return <td key={attribute} className={className}>{formatDate(dateOfBirth)}</td>;
                 } 
                 else if (attribute === 'active'){
-                    const age = calculateAge(customer[attribute]);
+                    const subscribedDate = new Date(customer[attribute]);
+                    const age = calculateAge(subscribedDate);
                     const className = age >= 1 ? "unsubscribed-customer" : "";
 
-                    return <td key={attribute} className={className}>{customer[attribute]}</td>;
+                    return <td key={attribute} className={className}>{formatDate(subscribedDate)}</td>;
 
                 }
                 
