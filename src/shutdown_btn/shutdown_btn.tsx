@@ -1,5 +1,7 @@
 import { Component } from 'react';
 import toastr from "toastr";
+import imgUrl from '../../shutdown-icon.png'
+
 
 interface ShutdownButtonProps {
   imageUrl: string;
@@ -29,7 +31,7 @@ class ShutdownButton extends Component<ShutdownButtonProps> {
     return (
       <div className='shutdown-button-container'>
       <button className="shutdown-button" onClick={this.sendShutdownRequest}>
-        <img src={this.props.imageUrl} alt="Shutdown Button" />
+        <img src={imgUrl} alt="Shutdown Button" />
       </button>
       </div>
     );

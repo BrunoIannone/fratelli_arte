@@ -66,8 +66,12 @@ const CustomerTable = ({ customers, selectedAttributes }: { customers: Customer[
                 
                 
                 else {
-                 
+                  if(!customer[attribute]){
+                    return <td style={{ backgroundColor: "gray" }} key={attribute}>{customer[attribute]}</td>;
+                  }
+                  else{
                   return <td key={attribute}>{customer[attribute]}</td>;
+                  }
                 }
               })}
             </tr>

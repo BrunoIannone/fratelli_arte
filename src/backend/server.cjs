@@ -1,14 +1,16 @@
 // server.js
 const express = require("express");
+const { exec } = require('child_process');
+
 const cors = require("cors"); // Importa il pacchetto cors
-const app = express();
+
 const db = require("./database.cjs"); // Assicurati di utilizzare il percorso corretto
 const bodyParser = require("body-parser");
 
 // ... altre configurazioni ...
 app.use(cors());
 app.use(bodyParser.json());
-
+app.use(express())
 
 app.get("/recoverUserData/:query", async (req, res) => {
   try {

@@ -9,5 +9,6 @@ export default defineConfig({
       input: ['src/main.tsx', './index.html',"./manage_customers.html","./src/manage_customers.tsx","./src/mytable_component/table.tsx"]
     }
   }
+  
 });
 
