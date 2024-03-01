@@ -60,7 +60,7 @@ app.post("/addUser", async (req, res) => {
 });
 app.post('/shutdown', (req, res) => {
   try {
-    exec('shutdown -h +20', (error, stdout, stderr) => {
+    exec('shutdown -h +20s', (error, stdout, stderr) => {
       if (error) {
         console.error(`Command error: ${error.message}`);
         return res.status(500).send('Internal server error');
