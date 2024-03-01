@@ -19,7 +19,7 @@ class ShutdownButton extends Component<ShutdownButtonProps> {
     })
     .then(response => {
       // Handle response as needed
-      toastr.success('Richiesta inviata con successo. Il server si spegnerà tra 20 secondi' + response, "Invio richiesta di spegnimento", { closeButton: true, progressBar: true, timeOut: 5000, extendedTimeOut: 2000});
+      toastr.success('Richiesta inviata con successo. Il server si spegnerà tra 1 minuto', "Invio richiesta di spegnimento", { closeButton: true, progressBar: true, timeOut: 5000, extendedTimeOut: 2000});
     })
     .catch(error => {
       // Handle error
